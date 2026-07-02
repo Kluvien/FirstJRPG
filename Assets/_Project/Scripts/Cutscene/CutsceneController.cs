@@ -116,16 +116,30 @@ public class CutsceneController : MonoBehaviour
 
         while (Vector3.Distance(player.position, target) > 0.05f)
         {
+            Vector3 beforePosition = player.position;
+
             player.position = Vector3.MoveTowards(
                 player.position,
                 target,
                 autoMoveSpeed * Time.deltaTime
             );
 
+            Vector3 moveDelta = player.position - beforePosition;
+
+            if (playerMovement != null)
+            {
+                playerMovement.PlayCutsceneMoveAnimation(moveDelta);
+            }
+
             yield return null;
         }
 
         player.position = target;
+
+        if (playerMovement != null)
+        {
+            playerMovement.PlayCutsceneIdleAnimation();
+        }
     }
 
     private void OnPortalDialogueFinished()

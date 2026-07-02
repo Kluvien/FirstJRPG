@@ -45,6 +45,17 @@ public class BattleManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private string worldMapSceneName = "WorldMap";
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip uiConfirmSfx;
+    [SerializeField] private AudioClip playerSkillSfx;
+    [SerializeField] private AudioClip enemyAttackSfx;
+    [SerializeField] private AudioClip hitSfx;
+    [SerializeField] private AudioClip guardSfx;
+    [SerializeField] private AudioClip healSfx;
+    [SerializeField] private AudioClip criticalSfx;
+    [SerializeField] private AudioClip enemyDeathSfx;
+    [SerializeField] private AudioClip battleStartSfx;
+
     private BattleState state;
     private bool playerIsGuarding;
     private bool itemUsed;
@@ -69,6 +80,8 @@ public class BattleManager : MonoBehaviour
         UpdateUI();
         SetButtonsInteractable(false);
 
+        AudioManager.Instance?.PlaySFX(battleStartSfx);
+
         battleLogText.text = "Bug Beast appeared!";
         yield return new WaitForSeconds(1f);
 
@@ -88,24 +101,28 @@ public class BattleManager : MonoBehaviour
     private void OnAttackButton()
     {
         if (state != BattleState.PlayerTurn) return;
+        AudioManager.Instance?.PlaySFX(uiConfirmSfx);
         StartCoroutine(PlayerAttack());
     }
 
     private void OnSkillButton()
     {
         if (state != BattleState.PlayerTurn) return;
+        AudioManager.Instance?.PlaySFX(uiConfirmSfx);
         StartCoroutine(PlayerSkill());
     }
 
     private void OnGuardButton()
     {
         if (state != BattleState.PlayerTurn) return;
+        AudioManager.Instance?.PlaySFX(uiConfirmSfx);
         StartCoroutine(PlayerGuard());
     }
 
     private void OnItemButton()
     {
         if (state != BattleState.PlayerTurn) return;
+        AudioManager.Instance?.PlaySFX(uiConfirmSfx);
         StartCoroutine(PlayerItem());
     }
 
@@ -114,6 +131,7 @@ public class BattleManager : MonoBehaviour
         SetButtonsInteractable(false);
 
         int damage = enemyUnit.TakeDamage(playerUnit.Attack);
+        AudioManager.Instance?.PlaySFX(hitSfx);
         battleLogText.text = $"Debugger attacks! Bug Beast takes {damage} damage.";
 
         UpdateUI();
@@ -143,7 +161,10 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
+        AudioManager.Instance?.PlaySFX(playerSkillSfx);
+
         int damage = enemyUnit.TakeDamage(playerUnit.SkillPower);
+        AudioManager.Instance?.PlaySFX(hitSfx);
         battleLogText.text = $"Debugger uses Debug Strike! Bug Beast takes {damage} damage.";
 
         UpdateUI();
@@ -163,6 +184,8 @@ public class BattleManager : MonoBehaviour
     {
         SetButtonsInteractable(false);
 
+        AudioManager.Instance?.PlaySFX(guardSfx);
+
         playerIsGuarding = true;
         battleLogText.text = "Debugger guards and prepares for impact.";
 
@@ -181,6 +204,8 @@ public class BattleManager : MonoBehaviour
             PlayerTurn();
             yield break;
         }
+
+        AudioManager.Instance?.PlaySFX(healSfx);
 
         itemUsed = true;
         playerUnit.Heal(25);
@@ -203,6 +228,8 @@ public class BattleManager : MonoBehaviour
 
         bool enemyCritical = enemyCritGauge >= enemyCritGaugeMax;
 
+        AudioManager.Instance?.PlaySFX(enemyCritical ? criticalSfx : enemyAttackSfx);
+
         int enemyDamage = enemyUnit.Attack;
 
         if (enemyCritical)
@@ -217,6 +244,8 @@ public class BattleManager : MonoBehaviour
         }
 
         int damage = playerUnit.TakeDamage(enemyDamage);
+
+        AudioManager.Instance?.PlaySFX(hitSfx);
 
         if (enemyCritical && playerIsGuarding)
         {
@@ -252,6 +281,7 @@ public class BattleManager : MonoBehaviour
     {
         state = BattleState.Won;
         SetButtonsInteractable(false);
+        AudioManager.Instance?.PlaySFX(enemyDeathSfx);
         battleLogText.text = "Bug Beast defeated! Corruption removed.";
 
         StartCoroutine(ReturnToWorldMap());
