@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7589c6a563f00041b03857e6320a8b9, type: 3}
+  m_Name: Enemy
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterData
+  characterName: Bug Beast
+  battleSprite: {fileID: 21300000, guid: 82a728c5ac656d6449be36a05bdabe43, type: 3}
+  maxHP: 100
+  maxMP: 30
+  attack: 15
+  defense: 5
+  skillPower: 25
